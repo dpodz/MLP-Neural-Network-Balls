@@ -57,7 +57,8 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
         {
             neuronsList.Add(new float[layers[i]]);
         }
-
+        //neuronsList[1][neuronsList[1].Length - 1] = 1;
+        //neuronsList[2][neuronsList[2].Length - 1] = 1;
         neurons = neuronsList.ToArray();
     }
 
@@ -99,11 +100,11 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
             neurons[0][i] = inputs[i];
         }
 
-        for (int i = 1; i < inputs.Length; i++)
+        for (int i = 1; i < layers.Length; i++)
         {
             for (int j = 0; j < neurons[i].Length; j++)
             {
-                float value = 0.25f; // 0.25 is the const bias
+                float value = 0f; // 0f is the const bias
 
                 for (int k = 0; k < neurons[i-1].Length; k++)
                 {
@@ -114,7 +115,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
             }
         }
 
-        return neurons[neurons.Length-1];
+        return neurons[neurons.Length-1]; // Return the output neurons; could use neurons[-1]
     }
 
     // Mutate neural network weights
@@ -132,7 +133,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
                     float weight = weights[i][j][k];
 
                     // mutate weight value
-                    float randomNumber = UnityEngine.Random.Range(0f, 1000f)
+                    float randomNumber = UnityEngine.Random.Range(0f, 8f)
                         ;
 
                     if (randomNumber <= 2f)
@@ -168,9 +169,39 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
         fitness = fit;
     }
 
-    public float GetFitness(float fit)
+    public float GetFitness()
     {
         return fitness;
+    }
+
+    public string GetNeuralNetString()
+    {
+        string nnDataString = "";
+        // Neurons info
+        for (int i = 0; i < neurons.Length; i++)
+        {
+            for (int j = 0; j < neurons[i].Length; j++)
+            {
+                nnDataString += " " + neurons[i][j];
+            }
+            nnDataString += " :: ";
+        }
+
+        //for (int i = 0; i < weights.Length; i++)
+        //{
+        //    nnDataString += "{ ";
+        //    for (int j = 0; j < weights[i].Length; j++)
+        //    {
+        //        nnDataString += "[";
+        //        for (int k = 0; k < weights[i][j].Length; k++)
+        //        {
+        //            nnDataString += weights[i][j][k] + ", ";
+        //        }
+        //        nnDataString += "], ";
+        //    }
+        //    nnDataString += "} :: ";
+        //}
+        return nnDataString;
     }
 
     // Compare fitness between Neural Networks

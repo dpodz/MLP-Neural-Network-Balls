@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour {
     private bool initilized = false;
-    private Transform hex;
+    private Transform pickup;
 
-    private NeuralNetwork net;
+    public NeuralNetwork net;
     private Rigidbody rBody;
     private Material[] mats;
 
@@ -22,65 +22,64 @@ public class Ball : MonoBehaviour {
     {
         if (initilized == true)
         {
-            float distance = Vector3.Distance(transform.position, hex.position);
+            float distance = Vector3.Distance(transform.position, pickup.position);
             if (distance > 20f)
                 distance = 20f;
             for (int i = 0; i < mats.Length; i++)
                 mats[i].color = new Color(distance / 20f, (1f - (distance / 20f)), (1f - (distance / 20f)));
 
-            float[] inputs = new float[1];
+            float[] inputs = new float[2];
 
+            Vector3 deltaVector = (pickup.position - transform.position);
 
-            float angle = transform.eulerAngles.z % 360f;
-            if (angle < 0f)
-                angle += 360f;
+            //float rad = Mathf.Atan2(deltaVector.z, deltaVector.x);
+            //rad *= Mathf.Rad2Deg;
 
-            Vector2 deltaVector = (hex.position - transform.position).normalized;
+            //rad = rad % 360;
+            //if (rad < 0)
+            //{
+            //    rad = 360 + rad;
+            //}
 
+            //rad = 90f - rad;
+            //if (rad < 0f)
+            //{
+            //    rad += 360f;
+            //}
+            //rad = 360 - rad;
+            //rad -= angle;
+            //if (rad < 0)
+            //    rad = 360 + rad;
+            //if (rad >= 180f)
+            //{
+            //    rad = 360 - rad;
+            //    rad *= -1f;
+            //}
+            //rad *= Mathf.Deg2Rad;
 
-            float rad = Mathf.Atan2(deltaVector.y, deltaVector.x);
-            rad *= Mathf.Rad2Deg;
-
-            rad = rad % 360;
-            if (rad < 0)
-            {
-                rad = 360 + rad;
-            }
-
-            rad = 90f - rad;
-            if (rad < 0f)
-            {
-                rad += 360f;
-            }
-            rad = 360 - rad;
-            rad -= angle;
-            if (rad < 0)
-                rad = 360 + rad;
-            if (rad >= 180f)
-            {
-                rad = 360 - rad;
-                rad *= -1f;
-            }
-            rad *= Mathf.Deg2Rad;
-
-            inputs[0] = rad / (Mathf.PI);
-
+            //inputs[0] = rad / (Mathf.PI);
+            inputs[0] = deltaVector.x;
+            inputs[1] = deltaVector.z;
 
             float[] output = net.FeedForward(inputs);
 
-            rBody.velocity = 2.5f * transform.up;
-            rBody.angularVelocity = 500f * output[0];
+            Vector3 movement = new Vector3(output[0], 0, output[1]);
+            rBody.AddForce(movement * 8);
 
-            net.AddFitness((1f - Mathf.Abs(inputs[0])));
+            net.AddFitness((5f - Mathf.Abs(deltaVector.magnitude)));
         }
     }
 
-    public void Init(NeuralNetwork net, Transform hex)
+    public string GetDeltaVectorMagnitude()
     {
-        this.hex = hex;
+        Vector3 deltaVector = (pickup.position - transform.position);
+        return "Magnitude: " + deltaVector.magnitude;
+    }
+
+    public void Init(NeuralNetwork net, Transform pickup)
+    {
+        this.pickup = pickup;
         this.net = net;
         initilized = true;
     }
-
-
 }

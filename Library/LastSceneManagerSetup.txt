@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_Scenes/Minigame.unity
+- path: C:/Users/Dan's Evolv miniITX/Downloads/NeuralNetworkTutorial/Assets/Scene/neural.unity
   isLoaded: 1
   isActive: 1

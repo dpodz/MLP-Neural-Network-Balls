@@ -23,10 +23,10 @@ GameObject:
   - component: {fileID: 23289980046206458}
   - component: {fileID: 135348557811409350}
   - component: {fileID: 54030109466775078}
-  - component: {fileID: 114464586560290928}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
+  - component: {fileID: 114663590278418160}
+  m_Layer: 8
+  m_Name: Ball
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 4ae3dbc9c911ccc41aa869079002be4c, type: 2}
+  - {fileID: 2100000, guid: bb6924aba4b942a44ac186284b2dd3e7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -98,7 +98,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114464586560290928
+--- !u!114 &114663590278418160
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -106,12 +106,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1382184225816452}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfd4c7779019fa94aacff2d976ed942e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2788e01b1ebf8cf42874ea7a487e32bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  countText: {fileID: 0}
-  winText: {fileID: 0}
 --- !u!135 &135348557811409350
 SphereCollider:
   m_ObjectHideFlags: 1
