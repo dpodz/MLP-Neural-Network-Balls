@@ -28,43 +28,22 @@ public class Ball : MonoBehaviour {
             for (int i = 0; i < mats.Length; i++)
                 mats[i].color = new Color(distance / 20f, (1f - (distance / 20f)), (1f - (distance / 20f)));
 
-            float[] inputs = new float[2];
-
             Vector3 deltaVector = (pickup.position - transform.position);
-
-            //float rad = Mathf.Atan2(deltaVector.z, deltaVector.x);
-            //rad *= Mathf.Rad2Deg;
-
-            //rad = rad % 360;
-            //if (rad < 0)
-            //{
-            //    rad = 360 + rad;
-            //}
-
-            //rad = 90f - rad;
-            //if (rad < 0f)
-            //{
-            //    rad += 360f;
-            //}
-            //rad = 360 - rad;
-            //rad -= angle;
-            //if (rad < 0)
-            //    rad = 360 + rad;
-            //if (rad >= 180f)
-            //{
-            //    rad = 360 - rad;
-            //    rad *= -1f;
-            //}
-            //rad *= Mathf.Deg2Rad;
-
-            //inputs[0] = rad / (Mathf.PI);
+            float[] inputs = new float[6];
             inputs[0] = deltaVector.x;
             inputs[1] = deltaVector.z;
+            inputs[2] = rBody.velocity.x;
+            inputs[3] = rBody.velocity.z;
+            inputs[4] = pickup.position.x;
+            inputs[5] = pickup.position.z;
+            //inputs[2] = transform.position.x;
+            //inputs[3] = transform.position.z;
 
             float[] output = net.FeedForward(inputs);
 
             Vector3 movement = new Vector3(output[0], 0, output[1]);
-            rBody.AddForce(movement * 8);
+            // rBody.velocity = new Vector3(movement.x * 16, 0, movement.z * 16);
+            rBody.AddForce(movement * 24);
 
             net.AddFitness((5f - Mathf.Abs(deltaVector.magnitude)));
         }

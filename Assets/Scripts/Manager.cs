@@ -1,24 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
-
+    // Settings, prefabs, etc
     public GameObject ballPrefab;
     public GameObject pickup;
-
-    public Text genText;
-    public Text fitText;
-    public Text nnText;
-    public Text timeText;
     public int timeSetting;
 
+    // Text related variables
+    public Text genText;
+    public Text fitText;
+    public Text prevFitText;
+    public Text prevMedianFitText;
+    public Text tenthMedianFitText;
+    public Text nnText;
+    public Text speedText;
+    private float pickupSpeed = 1f;
+    private float[] tenthMedianArray = new float[11];
+
+    // Variables used in methods throughout manager.cs
     private bool isTraining = false;
     private int populationSize = 50;
     private int generationNumber = 0;
-    private int[] layers = new int[] { 2, 10, 10, 2 }; //1 input and 2 outputs
+    private int[] layers = new int[] { 6, 20, 20, 2 }; // 6 inputs and 2 outputs
     private List<NeuralNetwork> nets;
     private bool leftMouseDown = false;
     private List<Ball> ballList = null;
@@ -26,7 +34,28 @@ public class Manager : MonoBehaviour
 
     void Timer()
     {
+        // Reset training loop
         isTraining = false;
+
+        // Get average and median fitness of gen before reset
+        float currentFit = 0;
+        List<float> fitList = new List<float>();
+        for (int i = 0; i < ballList.Count; i++)
+        {
+            currentFit += ballList[i].net.GetFitness();
+            fitList.Add(ballList[i].net.GetFitness());
+        }
+        prevFitText.text = "Average Previous Gen Fitness: " + (currentFit / populationSize);
+        fitList.Sort();
+        float medianFitness = fitList[fitList.Count / 2];
+        prevMedianFitText.text = "Median Previous Gen Fitness: " + medianFitness;
+
+        // display for the fitness 10 generations ago
+        tenthMedianArray[generationNumber % 11] = medianFitness;
+        if (generationNumber > 10)
+        {
+            tenthMedianFitText.text = "Median Fitness 10 Gens Ago: " + tenthMedianArray[(generationNumber - 10) % 11];
+        }
     }
 
     private void FixedUpdate()
@@ -69,7 +98,6 @@ public class Manager : MonoBehaviour
                 }
             }
 
-
             generationNumber++;
             genText.text = "Generation: " + generationNumber;
 
@@ -86,7 +114,16 @@ public class Manager : MonoBehaviour
         {
             leftMouseDown = false;
         }
-
+        if (Input.GetKeyDown("="))
+        {
+            pickupSpeed*=1.25f;
+            speedText.text = "Pickup Speed: " + pickupSpeed;
+        }
+        if (Input.GetKeyDown("-"))
+        {
+            pickupSpeed/= 1.25f;
+            speedText.text = "Pickup Speed: " + pickupSpeed;
+        }
         if (leftMouseDown == true)
         {
             // A few different ways of moving the pickup object
@@ -100,7 +137,7 @@ public class Manager : MonoBehaviour
             //}
         }
         // move the pickup in a circle
-        pickup.transform.position = new Vector3(Mathf.Sin(Time.fixedTime/2) * 9, 0.5f, Mathf.Cos(UnityEngine.Time.fixedTime/2) * 9);
+        pickup.transform.position = new Vector3(Mathf.Sin(Time.fixedTime/2 * pickupSpeed) * 9, 0.5f, Mathf.Cos(UnityEngine.Time.fixedTime/2 * pickupSpeed) * 9);
     }
 
 

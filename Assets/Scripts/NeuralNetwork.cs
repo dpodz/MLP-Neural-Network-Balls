@@ -133,23 +133,26 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
                     float weight = weights[i][j][k];
 
                     // mutate weight value
-                    float randomNumber = UnityEngine.Random.Range(0f, 8f)
-                        ;
+                    float randomNumber = UnityEngine.Random.Range(0f, 200f);
 
                     if (randomNumber <= 2f)
                     { // random mutation 1
+                      // flip sign of weight
                         weight *= -1f;
                     }
                     else if (randomNumber <= 4f)
                     { // random mutation 2
+                      // pick a random weight between -.5 and .5
                         weight = UnityEngine.Random.Range(-0.5f, 0.5f);
                     }
                     else if (randomNumber <= 6f)
                     { // random mutation 3
+                      // decrease by 0% to 100%
                         weight *= UnityEngine.Random.Range(0f, 1f);
                     }
                     else if (randomNumber <= 8f)
                     { // random mutation 4
+                      // increase to 100% or 200%
                         weight *= (UnityEngine.Random.Range(1f, 2f));
                     }
 
@@ -178,13 +181,24 @@ public class NeuralNetwork : IComparable<NeuralNetwork>{
     {
         string nnDataString = "";
         // Neurons info
-        for (int i = 0; i < neurons.Length; i++)
+        //for (int i = 0; i < neurons.Length; i++)
+        //{
+        //    for (int j = 0; j < neurons[i].Length; j++)
+        //    {
+        //        nnDataString += " " + neurons[i][j];
+        //    }
+        //    nnDataString += " :: ";
+        //}
+
+        //Input and Output Neurons info (just get first and last neuron layer)
+        for (int i = 0; i < neurons.Length; i+=3)
         {
+            nnDataString += "[";
             for (int j = 0; j < neurons[i].Length; j++)
             {
-                nnDataString += " " + neurons[i][j];
+                nnDataString += neurons[i][j] + ", ";
             }
-            nnDataString += " :: ";
+            nnDataString += "] :: ";
         }
 
         //for (int i = 0; i < weights.Length; i++)
